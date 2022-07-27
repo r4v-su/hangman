@@ -1,11 +1,12 @@
 class HangmanCanvas {
-	constructor(parentDiv) {
+	constructor() {
 		this.canvasConfig = {
 			width: "400px",
 			height: "400px",
 			bgCol: "none",
-            drawCol: 'red',
+            drawCol: 'rgb(255, 217, 0)',
 			border: "dotted",
+            borderCol: 'black'
 		};
 		this.canvasElement = this.createCanvas();
 		this.ctx = this.canvasElement.getContext("2d");
@@ -55,7 +56,8 @@ class HangmanCanvas {
 		const canvas = document.createElement("canvas");
 		canvas.setAttribute("width", this.canvasConfig.width);
 		canvas.style.backgroundColor = this.canvasConfig.bgCol;
-		canvas.style.border = this.canvasConfig.border;
+		canvas.style.border = this.canvasConfig.border,
+        canvas.style.borderColor = this.canvasConfig.borderCol,
 		console.log(this);
 		return canvas;
 	};
@@ -68,7 +70,7 @@ class HangmanCanvas {
 	showCanvas = function () {
 		this.canvasElement.style.display = "block";
 	};
-
+    //drawing clearing  canvas
 	clearCanvas = function () {
 		this.ctx.fillStyle = this.canvasConfig.bgCol;
 		this.ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
@@ -86,13 +88,66 @@ class HangmanCanvas {
 		this.ctx.stroke();
 	};
 }
+class PasswordPanel {
+	constructor() {
+		this.panel = this.makePanel();
 
+	}
+
+	makePanel = function() {
+		const panel = document.createElement('div');
+		panel.classList.add('panel-container');
+		panel.appendChild(this.makePassword('abcd'))
+		panel.appendChild(this.makeKeyboard())
+
+		return panel
+	}
+	makePassword = function(password) {
+		const div = document.createElement('ul');
+		div.classList.add('password');
+		const root = password;
+		const alphabet = [...root];
+			 alphabet.forEach(element => {
+				let key = document.createElement('li');
+				key.dataSet = element;
+				key.innerText = '_'
+				div.appendChild(key);
+			 });
+			 return div
+	}
+	
+	makeKeyboard = function () {
+				const div = document.createElement('ul');
+				div.classList.add('keyboard');
+				const root = 'ABCDEFGHIKLMNOPQRSTVXYZ'
+				const alphabet = [...root];
+					 alphabet.forEach(element => {
+						let key = document.createElement('li');
+						key.innerText = element;
+						div.appendChild(key);
+					 });
+					 return div
+			}
+
+	appendPanel = function(div) {
+		div.appendChild(this.panel)
+	}
+	hidePanel = () => {
+		this.panel.style.display = 'none'
+	}
+	showPanel = () => {
+		this.panel.style.display = 'block'
+	}
+}
 class HangmanGame {
-	constructor(parentDiv) {
-		this.parentDiv = parentDiv;
-		this.hangman = new HangmanCanvas(this.parentDiv);
-		this.hangman.appendCanvas(parentDiv);
-        this.mylog();
+	constructor(div) {
+		this.hangman = new HangmanCanvas();
+        this.passwordPanel = new PasswordPanel();
+		
+		this.mylog();
+
+		this.hangman.appendCanvas(div);
+		this.passwordPanel.appendPanel(div);
 	}
 
 	mylog = function () {
@@ -100,14 +155,15 @@ class HangmanGame {
             this.hangman.drawStickman(i)
         }
 	};
-}
+
+
+	}
 
 class App {
-	constructor(parentDiv) {
-		this.parentDiv = document.querySelector("#app-container");
-		this.hangman = new HangmanGame(this.parentDiv);
+	constructor() {
+		this.appDiv = document.getElementById('app-container');
+		this.game = new HangmanGame(this.appDiv);
+    }
 	}
-}
-
 new App();
 
