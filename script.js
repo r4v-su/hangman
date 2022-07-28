@@ -97,6 +97,7 @@ class KeyboardPanel {
 		this.panel = this.makePanel();
 		this.keyboard = this.makeKeyboard();
 		this.keys = this.makeKeys();
+		this.addkeys(this.keys, this.keyboard)
 	}
 
 	makePanel = () => {
@@ -112,6 +113,7 @@ class KeyboardPanel {
 	};
 
 	appendPanel = (div) => {
+		this.panel.appendChild(this.keyboard)
 		div.appendChild(this.panel);
 	};
 
@@ -128,6 +130,12 @@ class KeyboardPanel {
 		});
 		return keys;
 	};
+	
+	addkeys = function (keys, keyboard) {
+		keys.forEach((key) => {
+			keyboard.appendChild(key);
+		});
+	};
 
 	hidePanel = () => {
 		this.panel.style.display = "none";
@@ -136,6 +144,12 @@ class KeyboardPanel {
 	showPanel = () => {
 		this.panel.style.display = "block";
 	};
+
+	resetKeys = () => {
+		this.keys.forEach(key => {
+			key.classList.remove('used')
+		});
+	}
 }
 class PasswordPanel {
 	constructor(password) {
@@ -143,6 +157,7 @@ class PasswordPanel {
 		this.password = [...password];
 		this.keyboard = this.makePassBoard();
 		this.keys = this.makeKeys();
+		this.addkeys(this.keys, this.keyboard);
 	}
 
 	makePanel = () => {
@@ -157,6 +172,7 @@ class PasswordPanel {
 	};
 
 	appendPanel = (div) => {
+		this.panel.appendChild(this.keyboard)
 		div.appendChild(this.panel);
 	};
 
@@ -166,6 +182,12 @@ class PasswordPanel {
 
 	showPanel = () => {
 		this.panel.style.display = "block";
+	};
+
+	addkeys = function (keys, keyboard) {
+		keys.forEach((key) => {
+			keyboard.appendChild(key);
+		});
 	};
 
 	makeKeys = () => {
@@ -180,8 +202,14 @@ class PasswordPanel {
 		});
 		return keys;
 	};
-}
 
+	resetKeys = () => {
+		this.keys.forEach(key => {
+			key.innerText = '_'
+		});
+
+	}
+}
 class HangmanGame {
 	constructor(div, password) {
 		this.game = {
@@ -196,15 +224,9 @@ class HangmanGame {
 
 		this.hangman.appendCanvas(div);
 		this.keyboardPanel.appendPanel(div);
-		this.keyboardPanel.panel.appendChild(this.keyboardPanel.keyboard);
 		this.passwordPanel.appendPanel(div);
-		this.passwordPanel.panel.appendChild(this.passwordPanel.keyboard);
-
-		this.addkeys(this.passwordPanel.keys, this.passwordPanel.keyboard);
-		this.addkeys(this.keyboardPanel.keys, this.keyboardPanel.keyboard);
 
 		this.bindEventListeners(this.keyboardPanel.keys);
-
 	}
 
 	bindEventListeners = function (keys) {
@@ -221,12 +243,6 @@ class HangmanGame {
 					return clicked;
 				}
 			});
-		});
-	};
-
-	addkeys = function (keys, keyboard) {
-		keys.forEach((key) => {
-			keyboard.appendChild(key);
 		});
 	};
 
@@ -249,6 +265,8 @@ class HangmanGame {
 					lives: 0,
 				};
 				this.hangman.clearCanvas();
+				this.passwordPanel.resetKeys();
+				this.keyboardPanel.resetKeys();
 			}
 		}
 	};
@@ -260,13 +278,16 @@ class HangmanGame {
 
 createNewApp = (password) => {
 	const appDiv = document.getElementById('app-container')
-	new HangmanGame(appDiv, password)
-	console.log(password)
+	const Div = document.createElement('div')
+	Div.classList.add('app')
+	appDiv.appendChild(Div)
+	new HangmanGame(Div, password)
 }
 
 async function getData(url = 'http://random-word-form.herokuapp.com/random/noun') {
-	const response = fetch(url)
-	.then(response => response.json())
-	.then((result) => createNewApp(result[0]));
+fetch(url)
+.then(response => response.json())
+.then((result) => createNewApp(result[0]));
 }
+
 getData()
