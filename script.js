@@ -1,7 +1,7 @@
 class HangmanCanvas {
 	constructor() {
 		this.canvasConfig = {
-			width: "auto",
+			width: "150px",
 			bgCol: "none",
 			drawCol: "rgb(255, 217, 0)",
 			border: "dotted",
@@ -258,15 +258,23 @@ class HangmanGame {
 				this.game.lives = this.game.lives - 1;
 				this.hangman.drawStickman(this.game.lives * -1);
 			} else {
-				window.alert("koniec gry");
-				this.game = {
-					actualGuess: "",
-					password: "",
-					lives: 0,
-				};
-				this.hangman.clearCanvas();
+				const div = document.createElement('div');
+				div.innerHTML = '<h1>YOU LOOSE</h1>'
+				const modalButton = document.createElement('button');
+				modalButton.innerText = 'RESTART'
+				modalButton.onclick = function() {location.reload()}
+				const modal = document.createElement('div')
+
+				modal.appendChild(div);
+				div.appendChild(modalButton);
+				modal.classList.add('modal');
+				document.body.appendChild(modal)
+				
+
+
+				/*this.hangman.clearCanvas();
 				this.passwordPanel.resetKeys();
-				this.keyboardPanel.resetKeys();
+				this.keyboardPanel.resetKeys();*/
 			}
 		}
 	};
