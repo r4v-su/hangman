@@ -1,15 +1,19 @@
 class HangmanCanvas {
 	constructor() {
 		this.canvasConfig = {
-			width: '100%',
+			width: "auto",
 			bgCol: "none",
 			drawCol: "rgb(255, 217, 0)",
 			border: "dotted",
 			borderCol: "black",
+			padding: "10px",
+			lineWidth: 2,
 		};
 		this.canvasElement = this.createCanvas();
 		this.ctx = this.canvasElement.getContext("2d");
+		this.ctx.lineWidth = this.canvasConfig.lineWidth;
 	}
+
 	drawStickman = (arg) => {
 		switch (arg) {
 			case 1:
@@ -42,7 +46,6 @@ class HangmanCanvas {
 			case 10:
 				this.draw(60, 70, 20, 100);
 				break;
-
 			default:
 				break;
 		}
@@ -52,9 +55,9 @@ class HangmanCanvas {
 		const canvas = document.createElement("canvas");
 		canvas.setAttribute("width", this.canvasConfig.width);
 		canvas.style.backgroundColor = this.canvasConfig.bgCol;
-		(canvas.style.border = this.canvasConfig.border),
-			(canvas.style.borderColor = this.canvasConfig.borderCol),
-			console.log(this);
+		canvas.style.border = this.canvasConfig.border;
+		canvas.style.borderColor = this.canvasConfig.borderCol;
+		canvas.style.padding = this.canvasConfig.padding;
 		return canvas;
 	};
 	appendCanvas = function (div) {
@@ -118,6 +121,7 @@ class KeyboardPanel {
 		const alphabet = [...root];
 		alphabet.forEach((element) => {
 			let key = document.createElement("li");
+			key.classList.add("no_sel");
 			key.setAttribute("data-set", element.toUpperCase());
 			key.innerText = element;
 			keys.push(key);
@@ -136,16 +140,16 @@ class KeyboardPanel {
 class PasswordPanel {
 	constructor(password) {
 		this.panel = this.makePanel();
-		this.password = [...password.toUpperCase()];
+		this.password = [...password];
 		this.keyboard = this.makePassBoard();
-		this.keys = this.makeKeys()
+		this.keys = this.makeKeys();
 	}
 
 	makePanel = () => {
 		const panel = document.createElement("div");
 		panel.classList.add("panel-container");
 		return panel;
-	}
+	};
 	makePassBoard = () => {
 		const div = document.createElement("ul");
 		div.classList.add("password");
@@ -154,7 +158,7 @@ class PasswordPanel {
 
 	appendPanel = (div) => {
 		div.appendChild(this.panel);
-	}
+	};
 
 	hidePanel = () => {
 		this.panel.style.display = "none";
@@ -168,26 +172,24 @@ class PasswordPanel {
 		const keys = [];
 		const alphabet = this.password;
 		alphabet.forEach((element) => {
-			console.log(element)
 			let key = document.createElement("li");
+			key.classList.add("no_sel");
 			key.setAttribute("data-set", element.toUpperCase());
-			key.innerText = '_';
+			key.innerText = "_";
 			keys.push(key);
 		});
 		return keys;
 	};
-
-
 }
 
 class HangmanGame {
-	constructor(div) {
+	constructor(div, password) {
 		this.game = {
-			actualGuess: '',
-			password: 'onomatopeja',
+			actualGuess: "",
+			password: password,
 			lives: 0,
-		}
-
+		};
+		this.pass2UpperCase();
 		this.hangman = new HangmanCanvas();
 		this.keyboardPanel = new KeyboardPanel();
 		this.passwordPanel = new PasswordPanel(this.game.password);
@@ -195,34 +197,30 @@ class HangmanGame {
 		this.hangman.appendCanvas(div);
 		this.keyboardPanel.appendPanel(div);
 		this.keyboardPanel.panel.appendChild(this.keyboardPanel.keyboard);
-		this.passwordPanel.appendPanel(div)
+		this.passwordPanel.appendPanel(div);
 		this.passwordPanel.panel.appendChild(this.passwordPanel.keyboard);
 
 		this.addkeys(this.passwordPanel.keys, this.passwordPanel.keyboard);
 		this.addkeys(this.keyboardPanel.keys, this.keyboardPanel.keyboard);
 
 		this.bindEventListeners(this.keyboardPanel.keys);
-		
 
-
-		this.mylog();
-		//this.checkIf();
 	}
 
 	bindEventListeners = function (keys) {
 		keys.forEach((key) => {
-		key.addEventListener('click', (e) => {
-			if(e.target.classList.contains('used')){
-				return
-			} else {
-				e.target.classList.add('used')
-				let clicked = e.target
-				this.game.actualGuess = clicked.innerText;
-				this.checkIf();
+			key.addEventListener("click", (e) => {
+				if (e.target.classList.contains("used")) {
+					return;
+				} else {
+					e.target.classList.add("used");
+					let clicked = e.target;
+					this.game.actualGuess = clicked.innerText;
+					this.checkIf();
 
-				return clicked;
-			}
-		})
+					return clicked;
+				}
+			});
 		});
 	};
 
@@ -232,58 +230,43 @@ class HangmanGame {
 		});
 	};
 
-	checkIf = function() {
-		console.log(this.game)
-		if(this.game.password.includes(this.game.actualGuess)){
-			console.log('true')
-
+	checkIf = function () {
+		if (this.game.password.includes(this.game.actualGuess)) {
 			this.passwordPanel.keys.forEach((key) => {
-				if(key.dataset.set == this.game.actualGuess){
-					key.innerText = key.dataset.set
+				if (key.dataset.set == this.game.actualGuess) {
+					key.innerText = key.dataset.set;
 				}
-			} )
-
-
-		}
-			else 
-			{
-				console.log('false');
-				if(this.game.lives >= -9) {
-					this.game.lives = (this.game.lives -1);
-					this.hangman.drawStickman(this.game.lives*(-1))
-				}
-				else {
-					window.alert('koniec gry')
-					this.game = {
-						actualGuess: '',
-						password: '',
-						lives: 0,
-					}
+			});
+		} else {
+			if (this.game.lives >= -9) {
+				this.game.lives = this.game.lives - 1;
+				this.hangman.drawStickman(this.game.lives * -1);
+			} else {
+				window.alert("koniec gry");
+				this.game = {
+					actualGuess: "",
+					password: "",
+					lives: 0,
+				};
 				this.hangman.clearCanvas();
-				}
-
+			}
 		}
+	};
 
-	}
-
-	mylog = function () {
+	pass2UpperCase = function () {
 		this.game.password = this.game.password.toUpperCase();
-		console.log(this);
-
-
-		for (let i = 0; i <= 11; i++) {
-			//this.hangman.drawStickman(i);
-		}
 	};
 }
 
-
-
-class App {
-	constructor() {
-		this.appDiv = document.getElementById("app-container");
-		this.game = new HangmanGame(this.appDiv);
-	}
+createNewApp = (password) => {
+	const appDiv = document.getElementById('app-container')
+	new HangmanGame(appDiv, password)
+	console.log(password)
 }
 
-new App();
+async function getData(url = 'http://random-word-form.herokuapp.com/random/noun') {
+	const response = fetch(url)
+	.then(response => response.json())
+	.then((result) => createNewApp(result[0]));
+}
+getData()

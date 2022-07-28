@@ -16,16 +16,18 @@ header{
 
 
 .app-container {
+    width: 100%;
     background-color: rgba(255, 255, 255, 0.186);
     display: flex;
     padding: 10px 10px 10px 10px;
     border: 1px solid black;
     border-radius: 0px 0px 5px 5px;
+    flex-direction: row;
 
 }
 
 main {
-    display: flex;
+    display: block;
     flex-direction: column;
 
 }
@@ -41,6 +43,7 @@ main {
     display: block;
     height: auto;
     text-align: center;
+    text-justify: center;
     min-width: 20px;
     background-color:rgb(255, 217, 0);
     color:rgb(0, 0, 0);
@@ -67,6 +70,7 @@ main {
     display: block;
     height: auto;
     text-align: center;
+    text-justify: center;
     min-width: 20px;
     background-color:rgb(255, 217, 0);
     color:rgb(0, 0, 0);
@@ -75,4 +79,12 @@ main {
 .password > li{ 
     background-color:rgb(0, 0, 0);
     color:rgb(255, 217, 0);
+}
+
+li.no_sel {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none; 
+    -khtml-user-select: none; 
+    -ms-user-select: none;
 }
