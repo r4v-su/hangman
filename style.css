@@ -113,3 +113,28 @@ ul {
     background-color: rgba(255, 255, 255, 0.186);
     color:rgb(255, 217, 0);
 }
+.modal > div {
+    letter-spacing: 2px;
+    color: white;
+    margin: 20px auto;
+    width: 100%;
+    font-family: "Permanent Marker";
+    animation: bloody 4s ease infinite alternate;
+    -webkit-animation: bloody 2s ease infinite alternate;
+    -moz-animation: bloody 2s ease infinite alternate;
+    -o-animation: bloody 2s ease infinite alternate;
+    color: rgb(193, 0, 0);
+    margin: auto;
+  }
+
+@keyframes bloody {
+    0% {
+      text-shadow: 0px 1px 3px #c8102e;
+      letter-spacing: -0.025em;
+    }
+    100% {
+      text-shadow: 0px 5px 3px #c8102e, 0px 10px 3px #c8102e, 0px 15px 3px #c8102e,
+        0px 20px 3px #c8102e, 0px 25px 3px #c8102e, 0px 30px 3px #c8102e,
+        0px 35px 3px #c8102e, 0px 40px 3px #c8102e, 0px 45px 3px #c8102e,
+    }
+  }
