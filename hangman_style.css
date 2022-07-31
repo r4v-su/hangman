@@ -3,11 +3,11 @@ body {
     width: 100%;
     margin: 0 auto;
 }
-header{
+header {
     text-align: center;
     color: rgb(255, 217, 0);
 }
-.app{
+.app {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -88,6 +88,8 @@ ul {
 }
 
 .modal {
+    color: rgb(255, 217, 0);
+    padding: 20px;
     position: absolute;
     z-index: 1;
     display: flex;
@@ -98,33 +100,42 @@ ul {
     align-items: center;
     flex-direction: column;
 }
-.modal > div {
-    display: flex;
-    background-color: #0000009c;
-    color: rgb(255, 217, 0);
-    padding: 20px;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
 
-.modal > div > button {
+.modal_button {
     display: block;
     background-color: rgba(255, 255, 255, 0.186);
     color:rgb(255, 217, 0);
 }
-.modal > div {
+.modal_title--win {
+    font-size: xx-large;
+    text-align: center;
     letter-spacing: 2px;
     color: white;
     margin: 20px auto;
     width: 100%;
     font-family: "Permanent Marker";
     animation: bloody 4s ease infinite alternate;
-    -webkit-animation: bloody 2s ease infinite alternate;
-    -moz-animation: bloody 2s ease infinite alternate;
-    -o-animation: bloody 2s ease infinite alternate;
+    -webkit-animation: bloody 4s ease infinite alternate;
+    -moz-animation: bloody 4s ease infinite alternate;
+    -o-animation: bloody 4s ease infinite alternate;
+    color:rgb(255, 217, 0);
+    margin: none;
+  }
+
+  .modal_title--loose {
+    font-size: xx-large;
+    text-align: center;
+    letter-spacing: 2px;
+    color: white;
+    margin: 20px auto;
+    width: 100%;
+    font-family: "Permanent Marker";
+    animation: bloody 4s ease infinite alternate;
+    -webkit-animation: bloody 4s ease infinite alternate;
+    -moz-animation: bloody 4s ease infinite alternate;
+    -o-animation: bloody 4s ease infinite alternate;
     color: rgb(193, 0, 0);
-    margin: auto;
+    margin: none;
   }
 
 @keyframes bloody {

@@ -123,8 +123,9 @@ class KeyboardPanel {
 
 	makeKeys = () => {
 		const keys = [];
-		const root = "QWERTYUIOP ASDFGHJKL ZXCVBNM";
+		const root = "ABCDEFGHIKLMNOPQRSTVXYZ-";
 		const alphabet = [...root];
+
 		alphabet.forEach((element) => {
 			if(element !== ' ') {
 			let key = document.createElement("li");
@@ -219,21 +220,53 @@ class PasswordPanel {
 		});
 	};
 }
+
+class Modal {
+	constructor(result) {
+		this.win = result;
+	}
+	createModal = (win) => {
+		const text = (function(arg) { 
+			if(arg) return 'YOU WON';
+			else return 'YOU  LOOSE'
+		})(win);
+
+		const modalStyle = (function(arg) {
+			if (arg) return 'modal_title--win'
+			else return 'modal_title--loose'
+		 })(win);
+		const modal = document.createElement('div');
+		modal.classList.add('modal');
+		const modalTitle = document.createElement('span')
+		modalTitle.classList.add(modalStyle)
+		modalTitle.innerText = text;
+		const modalButton = document.createElement("button");
+		modalButton.classList.add('modal_button')
+		modalButton.innerText = "RESTART";
+		modalButton.onclick = () => {location.reload()};
+		modal.appendChild(modalTitle)
+		modal.appendChild(modalButton)
+		document.body.appendChild(modal);
+	}
+
+
+}
 class HangmanGame {
 	constructor(div, password) {
 		this.game = {
 			actualGuess: "",
-			password: password,
+			password: this.pass2UpperCase(password),
 			lives: 0,
 		};
-		this.pass2UpperCase();
 		this.hangman = new HangmanCanvas();
 		this.keyboardPanel = new KeyboardPanel();
 		this.passwordPanel = new PasswordPanel(this.game.password);
 
+
 		this.hangman.appendCanvas(div);
 		this.keyboardPanel.appendPanel(div);
 		this.passwordPanel.appendPanel(div);
+		this.modal = new Modal;
 
 		this.bindEventListeners(this.keyboardPanel.keys);
 	};
@@ -241,18 +274,14 @@ class HangmanGame {
 	bindEventListeners = function (keys) {
 		keys.forEach((key) => {
 			key.addEventListener("click", (e) => {
-				if (e.target.classList.contains("used")) {
-					return;
-					
-				} else {
-					e.target.classList.add("used");
-					let clicked = e.target;
+				let clicked = e.target;
+				if (!clicked.classList.contains("used")) {
+					clicked.classList.add("used");
 					this.game.actualGuess = clicked.innerText;
 					this.checkIf();
-
 					return clicked;
-				};
-			});
+				}
+			}, {once:true});
 		});
 	};
 
@@ -265,22 +294,19 @@ class HangmanGame {
 			});
 		} else {
 			if (this.game.lives >= -9) {
-				this.game.lives = this.game.lives - 1;
+				--this.game.lives
 				this.hangman.drawStickman(this.game.lives * -1);
 			} else {
-				const div = document.createElement("div");
+				this.modal.createModal(false)
+				
+				/*const div = document.createElement("div");
 				div.innerHTML = "<h1>YOU LOOSE</h1>";
-				const modalButton = document.createElement("button");
-				modalButton.innerText = "RESTART";
-				modalButton.onclick = function () {
-					location.reload();
-				};
-				const modal = document.createElement("div");
 
+				const modal = document.createElement("div");
 				modal.appendChild(div);
 				div.appendChild(modalButton);
 				modal.classList.add("modal");
-				document.body.appendChild(modal);
+				document.body.appendChild(modal);*/
 
 				/*this.hangman.clearCanvas();
 				this.passwordPanel.resetKeys();
@@ -289,8 +315,8 @@ class HangmanGame {
 		};
 	};
 
-	pass2UpperCase = function () {
-		this.game.password = this.game.password.toUpperCase();
+	pass2UpperCase = function (password) {
+		return password.toUpperCase();
 	};
 }
 
