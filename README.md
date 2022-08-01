@@ -7,4 +7,6 @@ Simple Hangman Game built with Vanilla JS with use of external random word gener
 **2**.Make modal show when user wins game.
 
 
-[](s/images/screenshot/01_iPhone12Pro.png?raw=true)
+
+<img src="images/screenshot/02_iPhone12pro.png" width="250px">
+<img src="images/screenshot/01_iPhone12pro.png" width="250px">
