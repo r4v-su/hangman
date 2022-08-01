@@ -8,5 +8,5 @@ Simple Hangman Game built with Vanilla JS with use of external random word gener
 
 
 
-<img src="images/screenshot/02_iPhone12pro.png" width="250px">
-<img src="images/screenshot/01_iPhone12pro.png" width="250px">
+<img src="images/screenshot/02_iPhone12pro.png" width="250px" alt="iphone12pross1">
+<img src="images/screenshot/01_iPhone12pro.png" width="250px" alt="iphone12pross1">
