@@ -123,7 +123,7 @@ class KeyboardPanel {
 
 	makeKeys = () => {
 		const keys = [];
-		const root = "ABCDEFGHIKLMNOPQRSTVXYZ-";
+		const root = "ABCDEFGHIJKLMNOPQRSTUVXYZ-";
 		const alphabet = [...root];
 
 		alphabet.forEach((element) => {
@@ -206,7 +206,7 @@ class PasswordPanel {
 		const alphabet = this.password;
 		alphabet.forEach((element) => {
 			let key = document.createElement("li");
-			key.classList.add("no_sel");
+			key.classList.add("no-sel");
 			key.setAttribute("data-set", element.toUpperCase());
 			key.innerText = "_";
 			keys.push(key);
@@ -219,32 +219,51 @@ class PasswordPanel {
 			key.innerText = "_";
 		});
 	};
+
+	/*checkResult = function(){
+		this.keys.forEach(key => {
+			if(key.innerText == key.dataset.set){
+				console.log(key)
+			}
+		});
+	}*/
+
+
 }
 
 class Modal {
 	constructor(result) {
 		this.win = result;
 	}
-	createModal = (win) => {
+	createModal = (win, password) => {
 		const text = (function(arg) { 
 			if(arg) return 'YOU WON';
 			else return 'YOU  LOOSE'
 		})(win);
 
 		const modalStyle = (function(arg) {
-			if (arg) return 'modal_title--win'
-			else return 'modal_title--loose'
+			if (arg) return 'modal-win' 
+			else return 'modal-loose'
 		 })(win);
+
 		const modal = document.createElement('div');
 		modal.classList.add('modal');
+
 		const modalTitle = document.createElement('span')
 		modalTitle.classList.add(modalStyle)
 		modalTitle.innerText = text;
+
+		const passSpan = document.createElement('p');
+		passSpan.innerText = `The password : ${password}`;
+
 		const modalButton = document.createElement("button");
-		modalButton.classList.add('modal_button')
+		modalButton.classList.add('modal-button')
 		modalButton.innerText = "RESTART";
+
 		modalButton.onclick = () => {location.reload()};
+
 		modal.appendChild(modalTitle)
+		modal.appendChild(passSpan);
 		modal.appendChild(modalButton)
 		document.body.appendChild(modal);
 	}
@@ -257,11 +276,11 @@ class HangmanGame {
 			actualGuess: "",
 			password: this.pass2UpperCase(password),
 			lives: 0,
+			guessCount: 0,
 		};
 		this.hangman = new HangmanCanvas();
 		this.keyboardPanel = new KeyboardPanel();
 		this.passwordPanel = new PasswordPanel(this.game.password);
-
 
 		this.hangman.appendCanvas(div);
 		this.keyboardPanel.appendPanel(div);
@@ -286,18 +305,26 @@ class HangmanGame {
 	};
 
 	checkIf = function() {
+		const password = this.game.password;
+		const passLength = password.length;
+		
 		if (this.game.password.includes(this.game.actualGuess)) {
 			this.passwordPanel.keys.forEach((key) => {
 				if (key.dataset.set == this.game.actualGuess) {
 					key.innerText = key.dataset.set;
+					this.game.guessCount++;
+					if(this.game.guessCount == passLength){
+						this.modal.createModal(true, password)
+					}
 				};
 			});
 		} else {
 			if (this.game.lives >= -9) {
 				--this.game.lives
 				this.hangman.drawStickman(this.game.lives * -1);
+
 			} else {
-				this.modal.createModal(false)
+				this.modal.createModal(false, password)
 				
 				/*const div = document.createElement("div");
 				div.innerHTML = "<h1>YOU LOOSE</h1>";
